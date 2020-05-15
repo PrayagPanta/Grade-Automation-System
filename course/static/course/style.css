@@ -1,0 +1,49 @@
+.conta
+{
+  display: flex;
+  flex-direction: column;
+}
+.cont {
+  height: 100%;
+}
+.conta > img{
+  justify-content: center;
+  height: 80%;
+  width: 90%;
+  margin: auto;
+}
+
+.point{
+   border: 2px solid  #cbd5db;
+   margin-bottom: 5px;
+}
+
+.keyword{
+  text-align: justify;
+   height: 50%;
+}
+
+.keyword > p {
+  border: 1px solid  #cbd5db;
+  overflow-y: scroll;
+  height: 150px;
+}
+
+
+h4 , h3 {
+  color :  DodgerBlue;
+  text-align: center;
+}
+
+h4 {
+  text-align: center;
+}
+
+.summary {
+  margin: 4px;
+  text-align: justify;
+}
+
+.col{
+  color:  DodgerBlue;
+}

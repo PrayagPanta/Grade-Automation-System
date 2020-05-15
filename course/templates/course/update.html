@@ -1,0 +1,36 @@
+{% extends "blog/base2.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extra_head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'course/style.css' %}">
+{% endblock %}
+{% block side %}
+<div class="cont">
+  <div class="point"><h3>Previous Marks  <br> {{ marks }} /20 </h3> </div>
+  <div class="keyword"><h4>Answer Keywords</h4> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> </div>
+</div>
+<form method="POST">
+    {% csrf_token %}
+    <fieldset class="form-group conta">
+        <center><legend class="keyword"><h4>Enter the marks for student</h4></legend></center>
+          {{ form|crispy }}
+    </fieldset>
+    <div class="form-group">
+        <button class="btn"><a href="{% url 'done' %}">Update</a></button><!--https://stackoverflow.com/questions/25345392/how-to-add-url-parameters-to-django-template-url-tag-->
+        <a class="btn" href="{% url 'search-Record' %}">Retain Previous</a>
+    </div>
+</form>
+{% endblock side %}
+{% block content %}
+<div class="content-section">
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group conta">
+            <h3 class="border-bottom mb-4" > Answer 1</h3>
+            <div class="summary"><h4>Summary of the Answer</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div>
+            <img src="/media/answersheet/answer.jpg">
+        </fieldset>
+    </form>
+</div>
+{% endblock content %}
