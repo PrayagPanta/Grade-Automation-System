@@ -16,5 +16,12 @@ def home(request):
 def about(request):
     return render(request, 'blog/about.html', {'title': 'About'})
 
+@login_required
+def comp(request):
+    return render(request,'blog/complaint_teacher.html')
+@login_required
+def compS(request):
+    return render(request,'blog/complaint_student.html')
+
 #class ViewEnrollment(ListView,LoginRequiredMixin):
     #model =  Enrolled

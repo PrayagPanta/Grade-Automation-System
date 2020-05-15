@@ -3,9 +3,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import ListView,UpdateView
 from .models import Marks,Subject,Teaches
+from users.models import StudentInfo,TeacherInfo
 from django.contrib.auth.decorators import login_required
-from .forms import NameForm,AddForm
+from .forms import NameForm,AddForm,NameForm2,UpdateForm
+import os
+#from mlmodel import analyze
 # Create your views here.
+
+files = []
 @login_required
 def newRecord(request):
     if request.method == 'POST':
@@ -16,7 +21,7 @@ def newRecord(request):
                 users = User.objects.get(id=SID)
             except User.DoesNotExist:
                 return render(request,'course/courseDoesNotExist.html')
-            return redirect(addMarks)
+            return redirect(addMarks,SID)
         else:
             return render(request,'course/Error.html')
     else:
@@ -29,31 +34,69 @@ def newRecord(request):
 @login_required
 def searchRecord(request):
     if request.method == 'POST':
-        pass
+        form = NameForm2(request.POST)
+        if form.is_valid():
+            sid =  form.cleaned_data.get('SID')
+            qno = form.cleaned_data.get('Qno')
+        try:
+            users = User.objects.get(id=sid)
+        except User.DoesNotExist:
+            return render(request,'course/courseDoesNotExist.html')
+        form = UpdateForm()
+        marks = 19
+        return render(request,'course/update.html',{'form': form ,'marks':marks,'sid':sid,'qno':qno })
     else:
         if( request.user.profile.role == 'T'):
-            form = NameForm()
+            form = NameForm2()
             return render(request, 'course/searchRecord.html', {'form': form})
         else:
             return render(request,'Error.html')
 
 @login_required
-def addMarks(request):
+def addMarks(request,SID):
     if request.method == 'POST':
         form = AddForm(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)
-            obj.Name = request.GET
-            obj.Checker = user.username
-            obj.Subject = Teaches.objects.get(Name=user).subject
+            obj.Name = StudentInfo.objects.get(Sid=SID)
+            obj.Checker = TeacherInfo.objects.get(Tid=request.user.id)
+            obj.Subject = Teaches.objects.get(Name=obj.Checker).Subject
+            obj.Question_No = form.cleaned_data.get('Qno')
             obj.save()
+            # if else condition to check if there are unmarked questions present
+            return render(request,'course/done.html')
         else:
             return render(request,'course/Error.html')
     elif request.method == 'GET':
         form = AddForm()
-        return render(request, 'course/addMarks.html', {'form': form})
+        Subject = Teaches.objects.get(Name=TeacherInfo.objects.get(Tid=request.user.id) ).Subject
+        id = SID
+        # if files is empty put each and every content of the directory in the file
+        # else
+        url = 'media/answersheet/'+str(id)+'/'+str(Subject)
+        files = os.listdir(url)
+        imgurl="/media/answersheet/"+str(id)+"/"+str(Subject)+"/1.jpg"
+        # summary , marks, totalmarks = analyze(imgurl)
+        return render(request, 'course/addMarks.html', {'form': form,'imgurl':imgurl,'files':files})
     else:
         pass
+@login_required
+def UpdateMarks(request):
+    if request.method == 'POST':
+        form = UpdateForm(request.POST)
+        if form.is_valid():
+            NewMarks =  form.cleaned_data.get('NewMarks')
+            mark = Marks.objects.filter(Question_No=1,Subject=Teaches.objects.get(Name=TeacherInfo.objects.get(Tid=request.user.id) ).Subject,Name=2)
+            mark.Marks = NewMarks  # change field
+            mark.save() # this will update only
+            return render(request,'course/done.html')
+    else:
+            return render(request,'course/Error.html')
+
+@login_required
+def done(request):
+    return render(request,'course/done2.html')            
+
 #class PostCreateView(LoginRequiredMixin, CreateView):
 #    model = Post
 #    fields = ['title', 'content']
