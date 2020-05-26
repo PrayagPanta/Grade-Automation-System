@@ -1,8 +1,17 @@
 {% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
-  <h2 class="Info2 content-section">Your Complaints</h2>
-  <br>
-  <p class="Info content-section" style="height: 400px; overflow-y: scroll;">
-   Sorry you cannot complain until the results have been announced
-  </p>
+  <h2 class="Info2 content-section">Lodge a Complaint</h2>
+  <h4 class="Info content-section" style="color:blue;">You cannot complain until the results have been announced</h3>
+  <div class="content-section">
+      <form method="POST">
+          {% csrf_token %}
+          <fieldset class="form-group">
+              {{ form|crispy }}
+          </fieldset>
+          <div class="form-group">
+              <center><button class="btn" type="submit">Complain</button></center>
+          </div>
+      </form>
+  </div>
 {% endblock content %}

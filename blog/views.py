@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post
 from course.models import Enrolled
 from django.contrib.auth.decorators import login_required
+from .forms import ComplaintForm
 
 @login_required
 def home(request):
@@ -21,7 +22,11 @@ def comp(request):
     return render(request,'blog/complaint_teacher.html')
 @login_required
 def compS(request):
-    return render(request,'blog/complaint_student.html')
+    if request.method == 'GET':
+        form = ComplaintForm()
+        return render(request,'blog/complaint_student.html',{'form': form})
+    else:
+        return render(request,'blog/Noresults.html')
 
 #class ViewEnrollment(ListView,LoginRequiredMixin):
     #model =  Enrolled

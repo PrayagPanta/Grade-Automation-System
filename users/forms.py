@@ -9,3 +9,10 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username','email','role','password1', 'password2']
+
+class PasswordForm(forms.Form):
+    OldPassword = forms.CharField(label="Old Password", max_length=100)
+    NewPassword = forms.CharField(label="New Password",max_length=100)
+    NewPassword2 = forms.CharField(label="Re-type New Password",max_length=100)
+    class Meta:
+        fields = ['OldPassword','NewPassword','NewPassword2']

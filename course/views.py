@@ -19,7 +19,9 @@ def newRecord(request):
             SID = form.cleaned_data.get('SID')
             try:
                 users = User.objects.get(id=SID)
-            except User.DoesNotExist:
+                if( users.profile.role == 'T'):
+                    return render(request,'course/courseDoesNotExist.html')
+            except:
                 return render(request,'course/courseDoesNotExist.html')
             return redirect(addMarks,SID)
         else:
@@ -29,7 +31,7 @@ def newRecord(request):
             form = NameForm()
             return render(request, 'course/newRecord.html', {'form': form})
         else:
-            return render(request,'Error.html')
+            return render(request,'course/Error.html')
 
 @login_required
 def searchRecord(request):
@@ -42,15 +44,15 @@ def searchRecord(request):
             users = User.objects.get(id=sid)
         except User.DoesNotExist:
             return render(request,'course/courseDoesNotExist.html')
-        form = UpdateForm()
-        marks = 19
-        return render(request,'course/update.html',{'form': form ,'marks':marks,'sid':sid,'qno':qno })
+        if( users.profile.role == 'T'):
+            return render(request,'course/Error.html')
+        return redirect(UpdateMarks,sid,qno,users)
     else:
         if( request.user.profile.role == 'T'):
             form = NameForm2()
             return render(request, 'course/searchRecord.html', {'form': form})
         else:
-            return render(request,'Error.html')
+            return render(request,'course/Error.html')
 
 @login_required
 def addMarks(request,SID):
@@ -81,21 +83,23 @@ def addMarks(request,SID):
     else:
         pass
 @login_required
-def UpdateMarks(request):
-    if request.method == 'POST':
+def UpdateMarks(request,sid,qno,users):
+    if request.method == 'GET':
+        form = UpdateForm()
+        marks = Marks.objects.filter(Question_No=qno,Subject=Teaches.objects.get(Name=TeacherInfo.objects.get(Tid=request.user.id) ).Subject,Name=sid).first()
+        return render(request,'course/update.html',{'form': form ,'marks':marks.Marks})
+    else:
         form = UpdateForm(request.POST)
         if form.is_valid():
             NewMarks =  form.cleaned_data.get('NewMarks')
-            mark = Marks.objects.filter(Question_No=1,Subject=Teaches.objects.get(Name=TeacherInfo.objects.get(Tid=request.user.id) ).Subject,Name=2)
-            mark.Marks = NewMarks  # change field
-            mark.save() # this will update only
-            return render(request,'course/done.html')
-    else:
+            Marks.objects.filter(Question_No=qno,Subject=Teaches.objects.get(Name=TeacherInfo.objects.get(Tid=request.user.id) ).Subject,Name=sid).update(Marks=NewMarks)
+            return render(request,'course/done2.html',{'NewMarks': NewMarks})
+        else:
             return render(request,'course/Error.html')
 
 @login_required
 def done(request):
-    return render(request,'course/done2.html')            
+    return render(request,'course/done2.html')
 
 #class PostCreateView(LoginRequiredMixin, CreateView):
 #    model = Post

@@ -13,6 +13,16 @@
                  <p class="text-seconday">Teacher </p>
            {% endif %}
         </div>
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Change Password</legend>
+                {{ form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info">Change</button>
+            </div>
+        </form>
       </div>
       <!-- FORM HERE -->
     </div>
