@@ -97,9 +97,7 @@ def UpdateMarks(request,sid,qno,users):
         else:
             return render(request,'course/Error.html')
 
-@login_required
-def done(request):
-    return render(request,'course/done2.html')
+
 
 #class PostCreateView(LoginRequiredMixin, CreateView):
 #    model = Post

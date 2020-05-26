@@ -17,7 +17,7 @@
           {{ form|crispy }}
     </fieldset>
     <div class="form-group">
-        <button class="btn"><a href="{% url 'done' %}">Update</a></button><!--https://stackoverflow.com/questions/25345392/how-to-add-url-parameters-to-django-template-url-tag-->
+        <button class="btn" type="submit">Update</button><!--https://stackoverflow.com/questions/25345392/how-to-add-url-parameters-to-django-template-url-tag-->
         <a class="btn" href="{% url 'search-Record' %}">Retain Previous</a>
     </div>
 </form>
