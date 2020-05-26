@@ -1,5 +1,4 @@
 # Grade-Automation-System
-Online Result System using Django
 To run project :
 1) python manage.py runserver
 2) Delete sqlite database 
